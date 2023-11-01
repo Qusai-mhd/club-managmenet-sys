@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-=2owk8mqt1jznmk&%3r)3)z9#k2^ng!bc=!w9iv9nnn+^@n)_%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.4','127.0.0.1']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -132,31 +132,13 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'reservations:reservations-list'
-
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'RS.azure_blobs.AzureMediaStorage'
-
-    STATICFILES_STORAGE = 'RS.azure_blobs.AzureStaticStorage'
-
-    STATIC_LOCATION = "static"
-    MEDIA_LOCATION = "media"
-
-    AZURE_ACCOUNT_NAME = os.environ.get('storage_account_name')
-    AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-    AZURE_ACCOUNT_KEY = os.environ.get('storage_account_key')
-
-    STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-    MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-else:
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
