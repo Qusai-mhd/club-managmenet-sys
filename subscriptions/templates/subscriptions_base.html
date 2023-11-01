@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+    {% block head %}
+
+    {% endblock %}
+{% block navbar %}
+
+    {% if perms.subscriptions.add_trainingsessionrecord %}
+    <a class="nav-item nav-link {% if subs_today_sessions_active %}active {% endif %}" href="{% url 'subscriptions:home' %}">الرئيسية</a>
+    {% endif %}
+    {% if perms.subscriptions.add_subscription %}
+    <a class="nav-item nav-link {% if subs_create_active %}active {% endif %}" href="{% url 'subscriptions:create-subscription' %}">تسجيل اشتراك جديد</a>
+    <a class="nav-item nav-link {% if subs_list_active %}active {% endif %}" href="{% url 'subscriptions:search-subscriptions' %}">الاشتراكات</a>
+    <a class="nav-item nav-link {% if customer_unconfirmed_active %}active {% endif %}" href="{% url 'users:unconfirmed-customers' %}">
+        العملاء الجدد {% if  applications_count > 0 %}({{ applications_count }}){% endif %}
+    </a>
+    {% endif %}
+    {% if perms.subscriptions.add_division or perms.subscriptions.add_trainingweekday %}
+    <a class="nav-item nav-link {% if subs_divisions_active %}active {% endif %}" href="{% url 'subscriptions:divisions-list' %}">فئات الأكاديمية</a>
+    {% endif %}
+    {% if perms.subscriptions.add_trainingsessionrecord %}
+    <a class="nav-item nav-link {% if att_records_active %}active {% endif %}" href="{% url 'subscriptions:previous-records' %}">سجلات التحضير</a>
+    {% endif %}
+{% endblock %}
+{% block nav_end %}
+
+<div class="dropdown">
+  <a class="nav-item nav-link" style="color: blue">
+  {% if user.is_authenticated %}
+    أهلاً {{ request.user.full_name }}
+  {% endif %}
+  </a>
+  <div class="dropdown-content">
+    {% if user.is_superuser %}
+        <a class="nav-item nav-link" href="{% url 'users:staff-list' %}">صفحة الإدارة</a>
+    {% endif %}
+    {% if perms.reservations.add_reservation %}
+        <a class="nav-item nav-link" href="{% url 'reservations:home' %}">إدارة الحجوزات</a>
+    {% endif %}
+        <a href="{% url 'users:reset-password' %}">تغيير كلمة المرور</a>
+        <a href="{% url 'users:logout' %}">تسجيل الخروج</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "reservation_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}تسجيل ملعب جديد{% endblock %}
+
+{% block head %}
+    <script src="{% static 'crispy_checkbox_fix.js' %}"></script>
+{% endblock %}
+{% block content %}
+
+<h5>تسجيل ملعب جديد</h5>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button class="btn btn-primary">تقدم</button>
+</form>
+
+    <script src="{% static 'create_facility.js' %}"></script>
+{% endblock %}

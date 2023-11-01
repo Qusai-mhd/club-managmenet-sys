@@ -1,0 +1,98 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% load i18n %}
+{% block title %}الاشتراكات{% endblock %}
+{% block head %}
+    {{ form.media.css }}
+    <style>
+        input, select {width: 100%}
+    </style>
+    <link rel="stylesheet" href="{% static 'subscriptionFormList.css' %}">
+    <script src="{% static 'subscriptionFormList.js' %}"></script>
+    {% load querystring_tag %}
+    <meta http-equiv="refresh" content="18000">
+{% endblock %}
+
+{% block content %}
+
+    {% if perms.subscriptions.add_subscription %}
+
+<h1>الاشتراكات</h1>
+
+    <form method="GET">
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">ابحث</button>
+        <a href="{% url 'subscriptions:search-subscriptions' %}"><button type="button" class="btn btn-secondary"> إعادة تعيين</button></a>
+    </form>
+    {% endif %}
+
+<br/><br/>
+    <nav aria-label="Page navigation example" id="pagination">
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="{% querystring page=1 %}#pagination">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="{% querystring page=page_obj.previous_page_number %}#pagination" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="{% querystring page=page_obj.number %}#pagination">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{% querystring page=page_obj.next_page_number %}#pagination" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.paginator.num_pages %}#pagination">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+<table class="table u-align-center " style="font-size:125%">
+        <thead>
+            <tr>
+                <th>العميل</th>
+                <th>رقم الجوال</th>
+                <th>الفئة</th>
+                <th>تاريخ الانتهاء</th>
+                <th>المبلغ المستحق</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subscription in page_obj %}
+            <tr
+                {% if subscription.latest_end_date < today %}
+                    class="red-row"
+                {% elif subscription.latest_end_date <= after_three_days %}
+                    class="yellow-row"
+                {% endif %}
+            >
+                <td><a href="{% url 'subscriptions:subscription-detail' pk=subscription.id %}">{{subscription.user}}</a></td>
+                <td>{{subscription.user.phone}}</td>
+                <td>{{subscription.division}}</td>
+                <td>{{subscription.latest_end_date|date:"d /m /Y"}}</td>
+                <td>{{subscription.total_due_payment}}</td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+
+    {{ form.media.js }}
+<script>
+    if (window.opener){
+        window.close();
+    }
+</script>
+{% endblock %}

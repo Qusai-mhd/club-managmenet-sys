@@ -1,0 +1,31 @@
+#id_reservations_permissions_field, #id_subscriptions_permissions_field{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+}
+
+input[type=checkbox]{
+    margin-left: 10px;
+}
+
+p{
+    font-weight: bold;
+}
+
+.helptext{
+    font-size: 14px;
+    font-style: italic;
+    font-weight: normal;
+}
+
+@media screen and (min-width: 650px) {
+  #id_reservations_permissions_field, #id_subscriptions_permissions_field {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 800px) {
+  #id_reservations_permissions_field, #id_subscriptions_permissions_field {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

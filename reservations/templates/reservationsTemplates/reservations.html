@@ -1,0 +1,92 @@
+{% extends "reservation_base.html" %}
+{% load static %}
+{% block head %}
+    <meta http-equiv="refresh" content="1800">
+    <link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+{% block title %}الرئيسية{% endblock %}
+{% block day_buttons %}
+
+    {% if next_days %}
+        <h5>الأوقات المتاحة:</h5>
+
+        {% for day in next_days %}
+            <a href="{% url 'reservations:free-slots' day=day.date %}"><button class="btn ">{{day.name}}</button></a>
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
+{% block content %}
+    <h2>الحجوزات القادمة</h2>
+    <br>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="?page=1">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+
+  <table class="table u-align-center " style="font-size:125%">
+        <thead >
+            <tr>
+                <th>العميل</th>
+                <th>رقم الجوال</th>
+                <th>الملعب</th>
+                <th>الوقت</th>
+                <th>السعر</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr
+                   {% if not reservation.facility.color == '#000000' %} style="background-color: {{ reservation.facility.color }}"{% endif %}>
+                <td>{{reservation.user}}</td>
+                <td>{{reservation.user.phone}}</td>
+                <td>{{reservation.facility}}</td>
+                <td>{{reservation.time_slot.start_time|date:"A g:i"}}</td>
+                <td>{{reservation.price}}</td>
+                <td>
+                    <div>
+                        <a href="{% url 'reservations:delete-reservation' pk=reservation.id %}"><button class="btn btn-danger" >إلغاء</button></a>
+                        <a href="{% url 'reservations:update-reservation' pk=reservation.id %}"><button class="btn btn-info">تعديل</button></a>
+                        <a href="{% url 'reservations:generate-invoice' pk=reservation.id %}"><button class="btn btn-success">إصدار فاتورة</button></a>
+
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+    <script>
+    if (window.opener){
+        window.close();
+    }
+    </script>
+{% endblock %}

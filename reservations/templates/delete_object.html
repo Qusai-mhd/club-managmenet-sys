@@ -1,0 +1,16 @@
+{% extends "reservation_base.html" %}
+{% block title %}حذف {{object.name}}{% endblock %}
+{% block content %}
+
+
+<h5>حذف {{object.name}}</h5>
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    هل أنت متأكد من أنك تريد حذف <strong>{{ object }}</strong>؟
+    <br><br/>
+    <button class="btn btn-danger">حذف</button>
+</form>
+    <a href="{% url 'reservations:home' %}" ><button class="btn btn-secondary">تراجع</button></a>
+
+
+{% endblock %}

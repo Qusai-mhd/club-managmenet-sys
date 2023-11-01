@@ -1,0 +1,25 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+{% load static %}
+{% block head %}
+    <script src="{% static 'crispy_checkbox_fix.js' %}"></script>
+{% endblock %}
+{% block title %}تسجيل فئة جديدة{% endblock %}
+
+{% block content %}
+
+<h5>تسجيل فئة جديدة</h5>
+<form method="post">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button>تقدم</button>
+</form>
+    <script>
+    if(window.opener){
+        window.close();
+    }
+    </script>
+    <script src="{% static 'create_division.js' %}"></script>
+{% endblock %}

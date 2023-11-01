@@ -1,0 +1,58 @@
+{% extends 'users_base.html' %}
+{% block title %}قائمة الموظفين{% endblock %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<table class="table u-align-center " style="font-size:125%">
+    <thead>
+        <tr>
+            <th>الاسم الكامل</th>
+            <th>رقم الهاتف</th>
+            <th>الجنس</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for staff in users %}
+        <tr {% if staff == request.user %}style="color: green"{% endif %}>
+            <td>
+                {{staff.full_name}}
+            </td>
+            <td>
+                {{staff.phone}}
+            </td>
+            <td>
+                {{ staff.gender }}
+            </td>
+            <td>
+                <div style="display: flex;flex-direction: row;gap: 5px">
+                    {% if user.is_superuser %}
+                    {% if not staff == request.user %}
+                    <a href="{% url 'users:delete-user' pk=staff.id %}"><button class="btn btn-danger">حذف</button></a>
+                    {% endif %}
+                    <a href="{% url 'users:update-user' pk=staff.id %}"><button class="btn btn-info">تعديل</button></a>
+                   {% if not staff == request.user %}
+                       <a href="{% url 'users:edit-permissions' pk=staff.id %}"><button style="white-space: nowrap" class="btn btn-secondary">تعديل الصلاحيات</button></a>
+                   {% endif %}
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+
+<script>
+    if (window.opener){
+        window.close();
+    }
+</script>
+
+{% endblock %}

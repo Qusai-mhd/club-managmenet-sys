@@ -1,0 +1,18 @@
+{% extends 'users_base.html' %}
+{% load static %}
+{%  load crispy_forms_tags %}
+{% block title %}تعديل المستخدم {{user_to_edit.full_name}}{% endblock %}
+
+{% block content %}
+        <h5>تعديل المستخدم {{user_to_edit.full_name}}</h5>
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button class="btn btn-info">تعديل</button>
+        </form>
+    </div>
+
+{#    <script src="{% static 'update_permissions.js' %}">#}
+    </script>
+{%  endblock %}

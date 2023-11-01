@@ -1,0 +1,81 @@
+{% extends "reservation_base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% load i18n %}
+{% block title %}تعديل الحجز{% endblock %}
+{% block head %}
+{{ wizard.form.media }}
+<link rel="stylesheet" href="{% static "custom_radios.css" %}">
+{% endblock %}
+
+{% block content %}
+<p>الخطوة {{ wizard.steps.step1 }} من {{ wizard.steps.count }}</p>
+<form action="" method="post" id="reservation_form">
+    {% csrf_token %}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form|crispy }}
+    {% endfor %}
+{% else %}
+    {% if wizard.steps.current == '0' %}
+        <div class="containero">
+            <input type="radio"  class="radio" checked disabled>
+            <label class="form-control radio-label image-label">
+                <span class="choice-text">{{ oldReservation.facility.name }}</span>
+                <div class="image-container">
+                    {% if oldReservation.facility.image %}
+                    <img src="{{ oldReservation.facility.image.url }}" alt="صورة {{ oldReservation.facility.name }} ">
+                    {% else %}
+                    <img src="{% static 'field_default.png' %}" alt="صورة الملعب الافتراضية">
+                    {% endif %}
+                </div>
+            </label>
+        </div>
+        <br/><br/>
+    {% else %}
+        <h2>العميل: {{ oldReservation.user|title }}</h2><br/><br/>
+    {% endif %}
+    {% for field in wizard.form %}
+        {% if field.name == 'time_slot'%}
+            <div class="wrapper card-wrapper">
+            {% for slot in allSlots %}
+                {% if slot.id in freeSlotsIDs %}
+                    <div class="card available-card">
+                    {% if oldReservation.time_slot.id == slot.id %}
+                        <input type="radio" name="1-time_slot" value="{{ slot.id }}" id="t{{ slot.id }}" class="radio" checked>
+                    {% else %}
+                        <input type="radio" name="1-time_slot" value="{{ slot.id }}" id="t{{ slot.id }}" class="radio">
+                    {% endif %}
+                        <label for="t{{ slot.id }}" class="radio-label card-label">
+                            <h5>{{ slot.start_time|date:"g:i " }} - {{ slot.end_time|date:"g:i A" }}</h5>
+                        </label>
+                    </div>
+                {% else %}
+                    <div class="card unavailable-card">
+                        <h5>{{ slot.start_time|date:"g:i " }} - {{ slot.end_time|date:"g:i A" }}</h5>
+                    </div>
+                {% endif %}
+            {% endfor %}
+{#                <img src="{% static 'edit-icon.png' %}" id="edit-icon">#}
+            </div>
+
+        {% else %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                <span class="message">{{ field.errors }}</span>
+            </div>
+        {% endif %}
+        <br/>
+    {% endfor %}
+{% endif %}
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="btn btn-secondary">الخطوة السابقة</button>
+{% endif %}
+<input type="submit" value="تقدم" class="btn btn-success"/>
+</form>
+    {{ wizard.form.media.js }}
+{% endblock %}

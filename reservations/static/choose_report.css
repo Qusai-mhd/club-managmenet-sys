@@ -1,0 +1,19 @@
+input[type=date], select,input[type=number] {
+    text-align: right;
+}
+
+#div_id_reportType div, #div_id_reportPeriod div{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+}
+
+input[type=radio] {
+    margin-right: 15px;
+    margin-left: 30px;
+}
+.error{
+    color: red;
+    font-weight: bold;
+}

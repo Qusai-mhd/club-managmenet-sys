@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}رسالة{% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <h2{% if message.tags %}
+            class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}"
+       {% endif %}>{{ message }}</h2><br/>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

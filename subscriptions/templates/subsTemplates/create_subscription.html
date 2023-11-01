@@ -1,0 +1,44 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}إنشاء اشتراك جديد{% endblock %}
+{% block head %}
+    {{ form.media.css }}
+    <link href="{% static 'create_subscription.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+<h5>إنشاء اشتراك جديد</h5>
+<form method="post" >
+    {% csrf_token %}
+    {{form|crispy}}
+    <button class="btn btn-success">إنشاء</button>
+</form>
+
+
+{{ form.media.js }}
+    <script src="{% static 'create_subscription.js' %}"></script>
+    <script>
+
+    $(function (){
+      // add an icon for creating a new customer
+      const user_input = $('.select2-selection');
+      if (user_input.length){
+          // add an icon after the user input field
+            const button = $('<img src="{% static 'add-icon.png' %}" alt="add icon" class="plus-icon">');
+            button.insertAfter(user_input);
+            button.click(function(){
+                window.open('{% url 'users:customer-create' %}', 'newwindow', 'width=992,height=550');
+            });
+
+            // This is an unnecessary arrow from the select2 library, so we hide it
+            const arrow = $('.select2-selection__arrow');
+            arrow.hide();
+      }
+    });
+
+    </script>
+{% endblock %}

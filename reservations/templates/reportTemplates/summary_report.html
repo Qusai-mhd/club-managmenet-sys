@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+	<meta charset="UTF-8">
+	<title>تقرير ملخص</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+            direction: rtl;
+            text-align: right;
+
+		}
+		h1 {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: right;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+		tfoot td {
+			font-weight: bold;
+			background-color: #f2f2f2;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		.footer {
+			font-size: 10px;
+			text-align: center;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 10px;
+			background-color: #f2f2f2;
+			border-top: 1px solid #ddd;
+		}
+	</style>
+</head>
+<body>
+    <h1>تقرير ملخص</h1>
+	<h3>من: {{ start_date }}</h3>
+	<h3>إلى: {{ end_date }}</h3>
+    <br/>
+    <h3>ملخص الحجوزات</h3>
+    <table id="summary-report">
+        <thead>
+        <tr>
+            <th>عدد الحجوزات</th>
+            <th>عدد العملاء</th>
+            <th>المدفوعات</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reports.reservations_report.reservations_count }}</td>
+                <td>{{ reports.reservations_report.users_count }}</td>
+                <td>{{ reports.reservations_report.total_paid }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <h3>ملخص الملاعب</h3>
+    <table id="facilities-report">
+        <thead>
+        <tr>
+            <th>اسم الملعب</th>
+            <th>عدد الحجوزات</th>
+            <th>الدخل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for facility in reports.facilities_report %}
+            <tr>
+                <td>{{ facility.facility__name }}</td>
+                <td>{{ facility.reservations_count }}</td>
+                <td>{{ facility.income_generated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <h3>ملخص فئات الملاعب</h3>
+    <table id="categories-report">
+        <thead>
+        <tr>
+            <th>اسم الفئة</th>
+            <th>عدد الحجوزات</th>
+            <th>الدخل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in reports.categories_report %}
+            <tr>
+                <td>{{ category.facility__category__name }}</td>
+                <td>{{ category.reservations_count }}</td>
+                <td>{{ category.income_generated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <h3>تفرير العملاء</h3>
+    <h5>أفضل 5 عملاء</h5>
+    <table id="customers-report">
+        <thead>
+        <tr>
+            <th>الاسم الكامل</th>
+            <th>الهاتف</th>
+            <th>الجنس</th>
+            <th>عدد الحجوزات</th>
+            <th>المدفوعات</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in reports.customers_report %}
+            <tr>
+                <td>{{ customer.user__full_name }}</td>
+                <td>{{ customer.user__phone }}</td>
+                {% if customer.user__gender == 'M' %}
+                <td>ذكر</td>
+                {% elif customer.user__gender == 'F' %}
+                <td>أنثى</td>
+                {% endif %}
+                <td>{{ customer.reservations_count }}</td>
+                <td>{{ customer.total_paid }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <h3>ملخص العملاء بحسب الجنس</h3>
+    <table id="categories-report">
+        <thead>
+        <tr>
+            <th>الجنس</th>
+            <th>عدد العملاء</th>
+            <th>عدد الحجوزات</th>
+            <th>الدخل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for gender in reports.gender_report %}
+            <tr>
+                {% if gender.user__gender == 'M' %}
+                <td>الذكور</td>
+                {% elif gender.user__gender == 'F' %}
+                <td>الإناث</td>
+                {% endif %}
+                <td>{{ gender.customers_count }}</td>
+                <td>{{ gender.reservations_count }}</td>
+                <td>{{ gender.income_generated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+        <div class="footer">
+		تم إنشاء التقرير في:  {{ time }}
+	</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block title %}تمديد اشتراك{% endblock %}
+{% block head %}
+    <link href="{% static 'create_subscription.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+<h3>تمديد اشتراك {{ subscription.user }} في {{ subscription.division }}</h3>
+<form method="post" >
+    <br/>
+    <span class="info">ينتهي الاشتراك في: {{ subscription_end_date }}</span>
+    <br/><br/>
+    {% csrf_token %}
+    {{form|crispy}}
+    <button class="btn btn-success">تمديد</button>
+    <a href="{% url 'subscriptions:subscription-detail' pk=subscription.id %}"><button type="button" style="white-space: nowrap" class="btn btn-secondary">عودة</button></a>
+</form>
+    <script src="{% static 'create_subscription.js' %}"></script>
+
+{% endblock %}

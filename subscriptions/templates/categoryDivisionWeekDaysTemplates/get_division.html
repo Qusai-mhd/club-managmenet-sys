@@ -1,0 +1,50 @@
+{% extends 'subscriptions_base.html' %}
+
+{% block title %}{{ division.name }}{% endblock %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <h3>تفاصيل الفئة</h3>
+    <div class="d-flex d-flex-inline">
+        <span class="pe-2">اسم الفئة:&nbsp</span> <h5>{{ division.name|title }}</h5>
+        &nbsp&nbsp&nbsp&nbsp&nbsp
+        <br/>
+        <span class="pe-2">الرياضة :&nbsp</span> <h5>{{ division.category|title }}</h5>
+    </div>
+    <hr> <br>
+    {% if not division.training_days.exists %}
+        <h6 style="text-align: center; "><u style="text-align: center">لا يوجد مواعيد للحصص معرفة لهذه الفئة</u></h6>
+    {% else %}
+        <h4 style="font-weight: bold">أوقات الحصص</h4><br/>
+
+    <table class="table u-align-center " style="font-size:125%">
+            <thead>
+                <tr>
+                    <th>اليوم</th>
+                    <th>وقت البداية</th>
+                    <th>وقت الانتهاء</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for weekday in division.training_days.all %}
+                <tr>
+                    <td>{{ weekday.day }}</td>
+                    <td>{{ weekday.start_time|date:"A g:i" }}</td>
+                    <td>{{ weekday.end_time|date:"A g:i" }}</td>
+                </tr>
+             {% endfor %}
+            </tbody>
+    </table>
+    {% endif %}
+    <p>
+        {% if perms.subscriptions.add_weekday %}
+        <a href="{% url 'subscriptions:edit-days' pk=division.id %}" role="button" class="btn btn-primary w-100 mb-2">تعديل أوقات الحصص</a>
+        {% endif %}
+        <a href="{% url 'subscriptions:divisions-list' %}" role="button" class="btn btn-secondary w-100">عرض جميع الفئات</a>
+    </p>
+
+{% endblock content %}

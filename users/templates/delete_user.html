@@ -1,0 +1,16 @@
+{% extends "users_base.html" %}
+{% block title %}حذف المستخدم {{user_to_delete.full_name}}{% endblock %}
+
+{% block content %}
+
+<h5>حذف المستخدم {{user_to_delete.full_name}}</h5>
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    هل أنت متأكد من أنك تريد حذف المستخدم: <strong>{{ user_to_delete.full_name }}</strong>؟
+    <br/><br/>
+    <button class="btn btn-danger">حذف</button>
+</form>
+        <a href="{% url 'users:staff-list' %}" style="display: inline-block">
+        <button class="btn btn-secondary">تراجع</button></a>
+
+{% endblock %}

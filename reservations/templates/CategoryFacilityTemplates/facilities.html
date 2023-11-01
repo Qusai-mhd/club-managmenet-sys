@@ -1,0 +1,57 @@
+{% extends "reservation_base.html" %}
+{% load static %}
+{% block title %}الملاعب{% endblock %}
+{% block content %}
+
+<link href="{% static 'facilities.css' %}" rel="stylesheet">
+
+{% if perms.reservations.add_facility %}
+   <a href="{% url 'reservations:create-facility' %}"><button class="btn btn-primary">تسجيل ملعب جديد</button></a>
+    <br/>
+    <br/>
+{% endif %}
+  <table class="table u-align-center" style="font-size:125%">
+        <thead>
+            <tr>
+                <th>الملعب</th>
+                <th>الفئة</th>
+                <th>السعر الافتراضي</th>
+                <th>الصورة</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fac in facilities %}
+            <tr {% if fac.suspended %} class="red-row"{% endif %}>
+                <td><a href="{% url 'reservations:get-facility' pk=fac.id %}">{{fac.name}}</a></td>
+                <td>{{fac.category}}</td>
+                <td>{{fac.default_price}}</td>
+                <td>
+                {% if fac.image %}
+                    <img src="{{fac.image.url}}" width="150" class="img-thumbnail">
+                {% endif %}
+                </td>
+                <td>
+                    <div>
+                        {% if perms.reservations.add_facility %}
+                        <a href="{% url 'reservations:update-facility' pk=fac.id %}"><button class="btn btn-info">تعديل</button></a>
+                        {% endif %}
+                        {% if perms.reservations.add_timeslot %}
+                        <a href="{% url 'reservations:facility-timeslot-edit' pk=fac.id %}"><button class="btn btn-secondary">تعديل الأوقات</button></a>
+                        {% endif %}
+                    </div>
+                </td>
+
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+
+    <script>
+    if (window.opener){
+        window.close();
+    }
+    </script>
+
+
+{% endblock %}

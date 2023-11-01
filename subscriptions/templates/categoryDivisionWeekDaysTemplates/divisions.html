@@ -1,0 +1,54 @@
+{% extends "subscriptions_base.html" %}
+{% load static %}
+{% block title %}الفئات{% endblock %}
+{% block content %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+<style>
+tr,th{
+    text-align: center;
+}
+</style>
+{% if perms.subscriptions.add_division %}
+   <a href="{% url 'subscriptions:create-division' %}"><button class="btn btn-primary">تسجيل فئة جديدة</button></a>
+    <br/><br/>
+{% endif %}
+  <table class="table u-align-center " style="font-size:125%">
+        <thead>
+            <tr>
+                <th>الفئة</th>
+                <th>عدد المشتركين</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for division in divisions %}
+            <tr {% if division.suspended %} class="red-row" {% endif %}>
+                <td><a href="{% url 'subscriptions:get-division' pk=division.id %}">{{ division.category }} - {{division.name}}</a></td>
+                <td>{{ division.subscription_count }}</td>
+                <td>
+                    <div>
+                        {% if perms.subscriptions.add_division %}
+                        <a href="{% url 'subscriptions:update-division' pk=division.id %}"><button class="btn btn-info">تعديل</button></a>
+                        {% endif %}
+                        {% if perms.subscriptions.add_weekday %}
+{#                        <a href="#"><button class="btn btn-secondary">كشف المشتركين</button></a>#}
+                        <a href="{% url 'subscriptions:edit-days' pk=division.id %}"><button class="btn btn-secondary">تعديل أوقات الحصص</button></a>
+                        {% endif %}
+                    </div>
+                </td>
+
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+
+    <script>
+    if (window.opener){
+        window.close();
+    }
+    </script>
+
+
+{% endblock %}

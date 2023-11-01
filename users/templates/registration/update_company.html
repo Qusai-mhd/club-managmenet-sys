@@ -1,0 +1,15 @@
+{% extends "users_base.html" %}
+{% block title %}تعديل {{company.name}}{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+        <h5>تعديل {{company.name}}</h5>
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button >تعديل</button>
+        </form>
+    </div>
+{% endblock %}

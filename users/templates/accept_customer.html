@@ -1,0 +1,15 @@
+{% extends "subscriptions_base.html" %}
+{% block title %}قبول{% endblock %}
+{% block content %}
+
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    {{ form.confirm_button }}
+    <h4>هل أنت متأكد من أنك تريد قبول العميل {{ customer.full_name }} ؟</h4>
+    <br>
+    <button class="btn btn-success" type="submit">قبول</button>
+</form>
+    <a href="{% url 'users:unconfirmed-customers' %}" ><button class="btn btn-secondary">تراجع</button></a>
+
+
+{% endblock %}

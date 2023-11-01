@@ -1,0 +1,35 @@
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'login_style.css' %}">
+    <title>تسجيل الدخول</title>
+</head>
+<body>
+
+<div class="container">
+  <div class="message signup">
+    <div class="btn-wrapper">
+      <a href="{% url 'users:reset-password' %}" class="link">نسيت كلمة المرور؟</a>
+    </div>
+  </div>
+  <div class="form form--signup">
+    <div class="form--heading">مرحبا</div>
+    {% if messages %}
+    <ul class="messages" style="direction: rtl">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">تسجيل الدخول</button>
+</form>
+      </div>
+</div>
+
+
+</body>
+</html>

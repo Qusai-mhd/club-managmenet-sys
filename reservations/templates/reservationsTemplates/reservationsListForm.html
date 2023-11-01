@@ -1,0 +1,94 @@
+{% extends "reservation_base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% load i18n %}
+{% block title %}الحجوزات{% endblock %}
+{% block head %}
+    {{ form.media.css }}
+    <style>
+        input, select {width: 100%}
+    </style>
+    <link rel="stylesheet" href="{% static 'reservationsList.css' %}">
+    <script src="{% static 'reservationsList.js' %}"></script>
+    {% load querystring_tag %}
+{% endblock %}
+
+{% block content %}
+
+<h1>الحجوزات</h1>
+
+    <form method="GET">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ابحث</button>
+        <a href="{% url 'reservations:reservations-list' %}"><button type="button" class="btn btn-secondary"> إعادة تعيين</button></a>
+    </form>
+<br/>
+    <nav aria-label="Page navigation example" id="pagination">
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="{% querystring page=1 %}#pagination">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="{% querystring page=page_obj.previous_page_number %}#pagination" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="{% querystring page=page_obj.number %}#pagination">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{% querystring page=page_obj.next_page_number %}#pagination" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.paginator.num_pages %}#pagination">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+<table class="table u-align-center" style="font-size:125%">
+        <thead>
+            <tr>
+                <th>العميل</th>
+                <th>رقم الجوال</th>
+                <th>الملعب</th>
+                <th>اليوم</th>
+                <th>الوقت</th>
+                <th>السعر</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in page_obj %}
+            <tr
+            {% if not reservation.facility.color == '#000000' %} style="background-color: {{ reservation.facility.color }}"{% endif %}>
+                <td>{{reservation.user}}</td>
+                <td>{{reservation.user.phone}}</td>
+                <td>{{reservation.facility}}</td>
+                <td>{{reservation.day|date:"d /m /Y"}}</td>
+                <td>{{reservation.time_slot.start_time|date:"A g:i"}}</td>
+                <td>{{reservation.price}}</td>
+                <td>
+                        <div>
+                            <a href="{% url 'reservations:delete-reservation' pk=reservation.id %}"><button class="btn btn-danger">إلغاء</button></a>
+                            <a href="{% url 'reservations:update-reservation' pk=reservation.id %}"><button class="btn btn-info">تعديل</button></a>
+                            <a href="{% url 'reservations:generate-invoice' pk=reservation.id %}"><button class="btn btn-success">إصدار فاتورة</button></a>
+                    </div>
+
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+
+    {{ form.media.js }}
+{% endblock %}

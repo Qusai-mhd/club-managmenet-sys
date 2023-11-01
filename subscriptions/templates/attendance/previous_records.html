@@ -1,0 +1,71 @@
+{% extends "subscriptions_base.html" %}
+{% load static %}
+{% block head %}
+    <meta http-equiv="refresh" content="1800">
+    <link rel="stylesheet" href="{% static 'table_style.css' %}">
+    <meta http-equiv="refresh" content="18000">
+{% endblock %}
+{% block title %}سجلات التحضير السابقة{% endblock %}
+
+{% block content %}
+    <h2>السجلات السابقة </h2>
+    <br/><br/>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="?page=1">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+
+  <table class="table u-align-center" style="font-size:125%">
+        <thead >
+            <tr>
+                <th>الفئة</th>
+                <th>التاريخ</th>
+                <th>عدد المشتركين</th>
+                <th>عدد الحضور</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in page_obj %}
+            <tr>
+                <td>{{session.division}}</td>
+                <td>{{ session.date|date:"d /m /Y" }}</td>
+                <td>{{ session.students_count }}</td>
+                <td>{{ session.attendance_count }}</td>
+                <td>
+                    <div>
+                        <a href="{% url 'subscriptions:attendance-records' pk=session.id %}"><button class="btn btn-secondary">تنزيل كشف التحضير</button></a>
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

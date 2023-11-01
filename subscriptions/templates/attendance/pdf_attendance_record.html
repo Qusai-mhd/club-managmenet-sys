@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+	<meta charset="UTF-8">
+	<title>كشف التحضير</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+            direction: rtl;
+            text-align: right;
+
+		}
+		h1 {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: right;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+		.foot td {
+			font-weight: bold;
+			background-color: #f2f2f2;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+        .green-row{
+            background-color: #a0f576;
+        }
+        .red-row{
+            background-color: #f59494;
+        }
+	</style>
+</head>
+<body>
+    <h1>كشف تحضير</h1>
+    <h3 style="text-align: center">{{ training_session.division.category.name }} - {{ training_session.division.name }}</h3>
+	<h3 style="text-align: center">في تاريخ: {{ training_session.date }}</h3>
+    <h3>تم إصدار الكشف في: {{ time }}</h3>
+    <br/>
+	<table>
+		<thead>
+			<tr>
+				<th>المشترك</th>
+                <th>رقم الجوال</th>
+				<th>حاضر</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for record in individuals_records %}
+			<tr>
+				<td>{{ record.user.full_name }}</td>
+				<td>{{ record.user.phone }}</td>
+                {% if record.attended %}
+    				<td class="green-row">نعم</td>
+                {% else %}
+                    <td class="red-row">لا</td>
+                {% endif %}
+			</tr>
+			{% endfor %}
+            <tr class="foot">
+                <td></td>
+                <td></td>
+                <td>مجموع الحضور: {{ attended_count }}</td>
+            </tr>
+        </tbody>
+	</table>
+</body>
+</html>

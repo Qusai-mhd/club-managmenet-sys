@@ -1,0 +1,13 @@
+{% extends "subscriptions_base.html" %}
+{% block title %}رفض{% endblock %}
+{% block content %}
+
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    <h4>هل أنت متأكد من أنك تريد رفض العميل {{ customer.full_name }} ؟</h4>
+    <br>
+    <button class="btn btn-danger">رفض</button>
+</form>
+    <a href="{% url 'users:unconfirmed-customers' %}" ><button class="btn btn-secondary">تراجع</button></a>
+
+{% endblock %}

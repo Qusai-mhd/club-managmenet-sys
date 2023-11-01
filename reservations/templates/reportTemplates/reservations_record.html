@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+	<meta charset="UTF-8">
+	<title>كشف الحجوزات</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+            direction: rtl;
+            text-align: right;
+
+		}
+		h1 {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: right;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+		.foot td {
+			font-weight: bold;
+			background-color: #f2f2f2;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+    <h1>كشف الحجوزات</h1>
+	<h3>من: {{ start_date }}</h3>
+	<h3>إلى: {{ end_date }}</h3>
+    <h3>تم إنشاء التقرير في: {{ time }}</h3>
+    <br/>
+	<table>
+		<thead>
+			<tr>
+				<th>اسم العميل</th>
+				<th>الهاتف</th>
+				<th>الملعب</th>
+				<th>التاريخ</th>
+				<th>السعر</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for res in reservations %}
+			<tr>
+				<td>{{ res.user.full_name }}</td>
+				<td>{{ res.user.phone }}</td>
+				<td>{{ res.facility.name }}</td>
+                <td>{{ res.day|date:"M d, Y" }}</td>
+                <td>{{ res.price }}</td>
+			</tr>
+			{% endfor %}
+            <tr class="foot">
+                <td colspan="4"></td>
+                <td>{{ total_income }}</td>
+            </tr>
+        </tbody>
+	</table>
+</body>
+</html>

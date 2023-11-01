@@ -1,0 +1,48 @@
+{% extends "reservation_base.html" %}
+
+{% load static %}
+{% block title %}الأوقات المتاحة{% endblock %}
+{% block head %}
+    <link href="{% static 'free_slots.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block day_buttons %}
+
+    {% if next_days %}
+        <h5>الأوقات المتاحة:</h5>
+        {% for day in next_days %}
+            {% if day.date == chosenDay %}
+            <a href="{% url 'reservations:free-slots' day=day.date %}"><button class="btn btn-info">{{day.name}}</button></a>
+            {% else %}
+            <a href="{% url 'reservations:free-slots' day=day.date %}"><button class="btn" >{{day.name}}</button></a>
+
+            {% endif %}
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+    {% if facilities_slots %}
+        <br/><br/>
+        <div class="facilities">
+        {% for facility in facilities_slots %}
+            <div class="facility-wrapper">
+                <h5>{{facility.facility_name}}</h5>
+                <br/>
+                <div class="slots">
+                {% for slot in facility.free_slots %}
+                    <div class="card" style="white-space: nowrap">
+                        <h6>{{ slot.start_time|date:"g:i A" }}</h6>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'profile_dropdown_list_style.css' %}">
+
+    <script>
+        $(function(){
+            // if the device width is of a mobile device
+            if($(window).width() < 1000){
+                const containers = $('.container');
+                // remove the class container from all containers
+                containers.removeClass('container');
+                // add the class container-fluid to all containers
+                containers.addClass('container-fluid');
+            }
+        })
+    </script>
+
+    {% block head %}
+
+    {% endblock %}
+
+</head>
+<header>
+{% block header %}
+
+  <div id="nav-div-id" class="container bg-info p-3 ">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="display: flex;justify-content: space-between">
+        <div class="navbar-nav" style="display: flex;flex-direction: row; gap: 10px">
+            {% block navbar %}
+            {% endblock %}
+
+        </div>
+          <div style="display: flex;flex-direction: row">
+            {% block nav_end %}
+            {% endblock %}
+          </div>
+      </div>
+    </nav>
+  </div>
+{% endblock %}
+</header>
+<body>
+{# Add background image to the body#}
+<style>
+    #backgroundImage{z-index: 1;}
+
+#backgroundImage:before {
+    content: "";
+    position:fixed;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    {% if bg_url %}
+    background-image: url("{{ bg_url }}");
+    {% else %}
+    background-image: url("{% static 'ball.jpg' %}");
+    {% endif %}
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0.3;
+    filter:alpha(opacity=40);
+    height:100%;
+    width:100%;
+ }
+
+body {
+    direction: rtl;
+    text-align: right;
+}
+</style>
+
+<div id="backgroundImage">
+<div class="container mt-4" >
+
+    <div class="day-buttons" style="display: flex;flex-direction: row;justify-content: space-evenly">
+        {% block day_buttons %}
+        {% endblock %}
+    </div><br/>
+
+{% block content %}
+
+{% endblock %}
+</div>
+</div>
+</body>
+</html>

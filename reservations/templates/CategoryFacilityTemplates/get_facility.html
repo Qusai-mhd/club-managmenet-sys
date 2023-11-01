@@ -1,0 +1,34 @@
+{% extends 'reservation_base.html' %}
+
+{% block title %}{{ facility.name }}{% endblock %}
+
+{% block content %}
+
+    <h3>تفاصيل الملعب</h3>
+    <div class="d-flex d-flex-inline">
+        <span class="pe-2">اسم الملعب:&nbsp</span> <h5>{{ facility.name|title }}</h5>
+        &nbsp&nbsp&nbsp&nbsp&nbsp
+        <br/>
+        <span class="pe-2">فئة الملعب:&nbsp</span> <h5>{{ facility.category|title }}</h5>
+
+    </div>
+    <hr>
+        {% for timeSlot in facility.timeslot_set.all %}
+        <div>وقت البداية: {{ timeSlot.start_time|date:"A g:i" }}</div>
+        <div>وقت الانتهاء : {{ timeSlot.end_time|date:"A g:i" }}</div>
+        <hr>
+        {% endfor %}
+    <p>
+        {% if perms.reservations.add_timeslot %}
+        <a href="{% url 'reservations:facility-timeslot-edit' pk=facility.pk %}" role="button" class="btn btn-primary w-100 mb-2">تعديل أوقات عمل الملعب</a>
+        {% endif %}
+        <a href="{% url 'reservations:facilities-list' %}" role="button" class="btn btn-secondary w-100">عرض جميع الملاعب</a>
+    </p>
+
+
+    <script>
+    if (window.opener){
+        window.close();
+    }
+    </script>
+{% endblock content %}

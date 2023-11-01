@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+    {% block head %}
+
+    {% endblock %}
+{% block navbar %}
+
+    {% if perms.reservations.add_reservation %}
+    <a class="nav-item nav-link {% if home_active %}active{% endif %}" href="{% url 'reservations:home' %}">الرئيسية <span class="sr-only"></span></a>
+    <a class="nav-item nav-link {% if create_res_active %}active{% endif %}" href="{% url 'reservations:create-reservation' %}"> إنشاء حجز جديد</a>
+    <a class="nav-item nav-link {% if res_list_active %}active {% endif %}" href="{% url 'reservations:reservations-list' %}">الحجوزات</a>
+    {% endif %}
+
+    {% if perms.reservations.add_facility or perms.reservations.add_timeslot  %}
+    <a class="nav-item nav-link {% if facilities_active %} active {% endif %}" href="{% url 'reservations:facilities-list' %}">الملاعب</a>
+    {% endif %}
+
+    {% if perms.reservations.create_report %}
+    <a class="nav-item nav-link {% if reports_active %}active{% endif %}" href="{% url 'reservations:choose-report-staff' %}">التقارير</a>
+    {% endif %}
+
+{% endblock %}
+{% block nav_end %}
+<div class="dropdown">
+    <a class="nav-item nav-link" style="color: blue">
+    {% if user.is_authenticated %}
+    أهلاً   {{ request.user.full_name }}
+    {% endif %}
+    </a>
+    <div class="dropdown-content">
+    {% if user.is_superuser %}
+        <a class="nav-item nav-link" href="{% url 'users:staff-list' %}">صفحة الإدارة</a>
+    {% endif %}
+    {% if  perms.subscriptions.add_trainingsessionrecord %}
+        <a class="nav-item nav-link" href="{% url 'subscriptions:home' %}">الأكاديمية</a>
+    {% endif %}
+        <a href="{% url 'users:reset-password' %}">تغيير كلمة المرور</a>
+        <a href="{% url 'users:logout' %}">تسجيل الخروج</a>
+    </div>
+</div>
+{% endblock %}

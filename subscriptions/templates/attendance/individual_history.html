@@ -1,0 +1,67 @@
+{% extends "subscriptions_base.html" %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'attendance_history.css' %}">
+{% endblock %}
+{% block title %}سجل حضور{% endblock %}
+
+{% block content %}
+    <h2>سجل حضور {{ subscription }}</h2>
+    <br/><br/>
+    <h5 class="alert alert-info">حضر{{ summary.attended_count }} حصة من أصل {{ summary.overall_attendance }}<br/></h5>
+
+    <nav>
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="?page=1">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+
+  <table class="table u-align-center" style="font-size:125%">
+        <thead >
+            <tr>
+                <th>التاريخ</th>
+                <th>الحضور</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in page_obj %}
+
+            <tr {% if record.attended %} class="green-row">
+                <td>{{record.training_session_record.date|date:"d /m /Y"}}</td>
+                <td>حاضر</td>
+                {% else %} class="red-row">
+                <td>{{record.training_session_record.date|date:"d /m /Y"}}</td>
+                <td>غائب</td>
+                {% endif %}
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+    <a href="{% url 'subscriptions:subscription-detail' pk=subscription.id %}"><button type="button" style="white-space: nowrap" class="btn btn-secondary">عودة</button></a>
+{% endblock %}

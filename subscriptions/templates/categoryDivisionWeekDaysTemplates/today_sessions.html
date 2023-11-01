@@ -1,0 +1,62 @@
+{% extends "subscriptions_base.html" %}
+{% load static %}
+{% block head %}
+    <meta http-equiv="refresh" content="18000">
+    <link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+{% block title %}الرئيسية{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+    <ul class="messages" style="direction: rtl">
+        {% for message in messages %}
+        <li{% if message.tags %}
+            class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}"
+        {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>حصص التمرين القادمة </h2>
+    <br>
+    {% if sessions_count <= 0 %}
+        <div style="text-align: center; font-size: 24px">
+            <p>لا يوجد حصص اليوم</p>
+        </div>
+    {% else %}
+  <table class="table u-align-center " style="font-size:125%">
+        <thead>
+            <tr>
+                <th>الفئة</th>
+                <th>الرياضة</th>
+                <th>الوقت</th>
+                <th>عدد المشتركين</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{session.division.name}}</td>
+                <td>{{session.division.category.name}}</td>
+                <td>{{ session.start_time|date:"g:i A" }}</td>
+                <td>{{ session.subscription_count }}</td>
+                <td>
+                    <div>
+                        {% if perms.subscriptions.view_subscription or perms.subscriptions.add_subscription %}
+                        <a href="{% url 'subscriptions:search-subscriptions' %}?division={{ session.division.id }}"><button class="btn btn-info">بيانات المشتركين</button></a>
+                        {% endif %}
+                        {% if not session.existing_records_today %}
+                        <a href="{% url 'subscriptions:training-attendance' pk=session.id %}"><button class="btn btn-success">كشف التحضير</button></a>
+                        {% else %}
+                        <a href="{% url 'subscriptions:update-attendance' pk=session.existing_records_today %}"><button class="btn btn-secondary">تعديل كشف التحضير</button></a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+    {% endif %}
+{% endblock %}

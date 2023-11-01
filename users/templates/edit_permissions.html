@@ -1,0 +1,21 @@
+{% extends 'users_base.html' %}
+{% load static %}
+{%  load crispy_forms_tags %}
+{% block title %}تعديل صلاحيات: {{user_to_edit.full_name}}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'edit_permissions.css' %}">
+{% endblock %}
+{% block content %}
+        <h5>تعديل صلاحيات: {{user_to_edit.full_name}}</h5>
+    <div>
+        <form method="post" id="permissions_form">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-info">تحديث</button>
+        </form>
+    </div>
+
+    <script src="{% static 'update_permissions.js' %}">
+    </script>
+{%  endblock %}

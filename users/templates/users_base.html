@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+{% if user.is_superuser %}
+    <a class="nav-item nav-link {% if staff_list_active %}active{% endif %}" href="{% url 'users:staff-list' %}" style="white-space: nowrap">قائمة الموظفين <span class="sr-only"></span></a>
+    <a class="nav-item nav-link {% if create_staff_active %}active{% endif %}" href="{% url 'users:staff-create' %}" style="white-space: nowrap">تسجيل موظف جديد<span class="sr-only"></span></a>
+    <a class="nav-item nav-link {% if reports_active %}active{% endif %}" href="{% url 'reservations:choose-report' %}" style="white-space: nowrap">تقارير الحجوزات</a>
+    <a class="nav-item nav-link {% if subs_report_active %}active{% endif %}" href="{% url 'subscriptions:choose-report' %}" style="white-space: nowrap">تقارير الأكاديمية</a>
+    <a class="nav-item nav-link {% if org_active %}active{% endif %}" href="{% url 'middleapp:update-company' pk=1 %}" style="white-space: nowrap" >معلومات المؤسسة<span class="sr-only"></span></a>
+{% endif %}
+{%  endblock %}
+
+{% block nav_end %}
+    {% if user.is_superuser %}
+    <div class="dropdown">
+        <a class="nav-item nav-link" style="color: blue;">
+        {% if user.is_authenticated %}
+            أهلاً {{ request.user.full_name }}
+        {% endif %}
+        </a>
+        <div class="dropdown-content">
+              <a class="nav-item nav-link" href="{% url 'reservations:home' %}" style="">إدارة الحجوزات</a>
+              <a class="nav-item nav-link" href="{% url 'subscriptions:home' %}" style="">الأكاديمية</a>
+              <a href="{% url 'users:reset-password' %}">تغيير كلمة المرور</a>
+              <a href="{% url 'users:logout' %}">تسجيل الخروج</a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

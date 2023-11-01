@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+	<meta charset="UTF-8">
+	<title>تقرير ملخص</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+            direction: rtl;
+            text-align: right;
+
+		}
+		h1 {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: right;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+		tfoot td {
+			font-weight: bold;
+			background-color: #f2f2f2;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		.footer {
+			font-size: 10px;
+			text-align: center;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 10px;
+			background-color: #f2f2f2;
+			border-top: 1px solid #ddd;
+		}
+	</style>
+</head>
+<body>
+    <h1>تقرير ملخص</h1>
+	<h3>من: {{ start_date }}</h3>
+	<h3>إلى: {{ end_date }}</h3>
+    <br/>
+    <h3>ملخص الاشتراكات</h3>
+    <table id="summary-report">
+        <thead>
+        <tr>
+            <th>عدد الاشتراكات</th>
+            <th>الدخل</th>
+            <th>المدفوعات</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reports.new_subs_report.new_subs_count }}</td>
+                <td>{{ reports.new_subs_report.total_prices }}</td>
+                <td>{{ reports.new_subs_report.total_paid_amount }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <h3>ملخص الفئات</h3>
+    <table id="facilities-report">
+        <thead>
+        <tr>
+            <th>اسم الفئة</th>
+            <th>عدد المشتركين</th>
+            <th>عدد حصص التمرين</th>
+            <th>الدخل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for division in reports.division_report %}
+            <tr>
+                <td>{{ division }}</td>
+                <td>{{ division.subscriptions_count }}</td>
+                <td>{{ division.number_of_sessions }}</td>
+                <td>{{ division.income_generated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <h3>ملخص التمارين</h3>
+    <table id="categories-report">
+        <thead>
+        <tr>
+            <th>عدد التمارين</th>
+            <th>عدد الحضور</th>
+            <th>عدد الغياب</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reports.training_sessions_report.sessions_count }}</td>
+                <td>{{ reports.training_sessions_report.attended_count }}</td>
+                <td>{{ reports.training_sessions_report.absent_count }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+    </table>
+    <div class="footer">
+		تم إنشاء التقرير في:  {{ time }}
+	</div>
+</body>
+</html>

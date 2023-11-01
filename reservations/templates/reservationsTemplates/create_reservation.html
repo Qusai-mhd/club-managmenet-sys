@@ -1,0 +1,122 @@
+{% extends "reservation_base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% load i18n %}
+{% block title %}إنشاء حجز جديد{% endblock %}
+{% block head %}
+{{ wizard.form.media }}
+    <link rel="stylesheet" href="{% static "custom_radios.css" %}">
+{% endblock %}
+
+{% block content %}
+{% if isSingleCreateView %}
+   <h5> <a href="{% url 'reservations:create-weekly-reservation' %}" style="direction: ltr; text-align: right">إنشاء حجز أسبوعي؟</a></h5>
+{% endif %}
+<p>الخطوة {{ wizard.steps.step1 }} من {{ wizard.steps.count }}</p>
+<form action="" method="post" id="reservation_form">
+    {% csrf_token %}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form|crispy }}
+    {% endfor %}
+{% else %}
+    {% for field in wizard.form %}
+        {% if field.name == 'facility' %}
+            {#           The Facility input Field. Needs custom display to include images #}
+            <div class="wrapper image-wrapper clearfix">
+                {% for choice in field.field.choices %}
+                    <div class="containero">
+                        <input type="radio" name="0-facility" value="{{ choice.0 }}" id="c{{ choice.0 }}" class="radio ">
+                        <label for="c{{ choice.0 }}" class="form-control radio-label image-label">
+                            <span class="choice-text">{{ choice.1 }}</span>
+                            <div class="image-container">
+                                {% if choice.2.image %}
+                                    <img src="{{ choice.2.image.url }}" alt=" {{ choice.2.name }} image">
+                                {% else %}
+                                    <img src="{% static 'field_default.png' %}" alt="صورة الملعب الافتراضي">
+                                {% endif %}
+                            </div>
+                        </label>
+                        {% if form.field.errors %}
+                            <span class="message">{{ form.field.errors }}</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+{#                <img src="{% static 'add-icon.png' %}" alt="أضف ملعباً آخر" id="add_icon" style="cursor: pointer">#}
+            </div>
+        {% elif field.name == 'time_slot'%}
+            <div class="wrapper card-wrapper">
+            {% for slot in allSlots %}
+                {% if slot.id in freeSlotsIDs %}
+                    <div class="card available-card">
+                        <input type="radio" name="1-time_slot" value="{{ slot.id }}" id="t{{ slot.id }}" class="radio">
+                        <label for="t{{ slot.id }}" class="radio-label card-label">
+                            <h5>{{ slot.start_time|date:"g:i " }} - {{ slot.end_time|date:"g:i A" }}</h5>
+                        </label>
+                    </div>
+                {% else %}
+                    <div class="card unavailable-card">
+                        <h5>{{ slot.start_time|date:"g:i " }} - {{ slot.end_time|date:"g:i A" }}</h5>
+                    </div>
+                {% endif %}
+            {% endfor %}
+{#                <img src="{% static 'edit-icon.png' %}" id="edit-icon">#}
+            </div>
+
+        {% else %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                <span class="message">{{ field.errors }}</span>
+            </div>
+        {% endif %}
+        <br/>
+    {% endfor %}
+{% endif %}
+
+{#{% if wizard.steps.prev %}#}
+{#<div class="buttons">#}
+{#    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">الخطوة السابقة</button>#}
+{#    <input type="submit" value="تقدم"/>#}
+{#</div>#}
+{#{% else %}#}
+    <input type="submit" value="تقدم" class="btn btn-success"/>
+{#{% endif %}#}
+</form>
+
+    {{ wizard.form.media.js }}
+    {% if not isUpdateView %}
+        <script src="{% static 'create_reservation.js' %}" ></script>
+    {% endif %}
+
+    <script>
+    let isSingleCreateView;
+    {% if isSingleCreateView %}
+        isSingleCreateView = true;
+    {% endif %}
+
+
+    $(function (){
+      // add an icon for creating a new customer
+      const user_input = $('.select2-selection');
+      if (user_input.length){
+          // add an icon after the user input field
+            const button = $('<img src="{% static 'add-icon.png' %}" alt="add icon" class="plus-icon">');
+            button.insertBefore(user_input);
+            button.click(function(){
+                window.open('{% url 'users:customer-create' %}', 'newwindow', 'width=992,height=550');
+            });
+
+            // This is an unnecessary arrow from the select2 library, so we hide it
+            const arrow = $('.select2-selection__arrow');
+            arrow.hide();
+      }
+    });
+
+
+    </script>
+
+{% endblock %}

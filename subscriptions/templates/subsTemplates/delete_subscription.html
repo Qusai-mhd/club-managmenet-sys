@@ -1,0 +1,14 @@
+{% extends "subscriptions_base.html" %}
+{% block title %}حذف{% endblock %}
+{% block content %}
+
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    <h3>هل أنت متأكد من أنك تريد حذف اشتراك {{ subscription.user.full_name }} في {{ subscription.division }} ؟</h3>
+    <h4><strong>تنبيه:</strong>عند حذف الاشتراك سيتم حذف جميع سجلات حضوره وجميع الفواتير المسجلة له.</h4>
+    <br>
+    <button class="btn btn-danger">حذف</button>
+</form>
+    <a href="{% url 'subscriptions:subscription-detail' pk=subscription.id %}" ><button class="btn btn-secondary">تراجع</button></a>
+
+{% endblock %}

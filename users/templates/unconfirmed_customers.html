@@ -1,0 +1,78 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% load i18n %}
+{% block title %}طلبات العملاء{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'table_style.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% if  requests_count <= 0 %}
+        <div style="text-align: center; font-size: 24px">
+            <p>لا يوجد طلبات اشتراك</p>
+        </div>
+    {% else %}
+<h1>العملاء الجدد</h1>
+<br/>
+        <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+
+        {% if page_obj.previous_page_number != 1 %}
+            <li class="page-item"><a class="page-link" href="?page=1">الصفحة الأولى</a></li>
+        {% endif %}
+
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+              {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              {{ page_obj.next_page_number }}
+          </a>
+        </li>
+
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">الصفحة الأخيرة</a></li>
+        {% endif %}
+
+        {% endif %}
+      </ul>
+    </nav>
+<table class="table u-align-center " style="font-size:125%">
+        <thead>
+            <tr>
+                <th>العميل</th>
+                <th>رقم الجوال</th>
+                <th>تاريخ الميلاد</th>
+                <th>الجنس</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in page_obj %}
+            <tr>
+                <td>{{customer.full_name}}</td>
+                <td>{{customer.phone}}</td>
+                <td>{{customer.birth_date|date:"d /m /Y"}}</td>
+                <td>{{customer.gender}}</td>
+                <td>
+                    <div style="display: flex;flex-direction: row;gap: 5px">
+                        <a href="{% url 'users:confirm-customer' pk=customer.id %}"><button style="white-space: nowrap" class="btn btn-success">قبول</button></a>
+                        <a href="{% url 'users:dismiss-customer' pk=customer.id %}"><button style="white-space: nowrap" class="btn btn-danger">رفض</button></a>
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+    {% endif %}
+{% endblock %}

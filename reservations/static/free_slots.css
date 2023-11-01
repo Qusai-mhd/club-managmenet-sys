@@ -1,0 +1,33 @@
+.facilities{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 90px;
+}
+
+.slots{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.card{
+    border-radius: 10px;
+    background-color: aquamarine;
+    display: grid;
+    place-content: center;
+}
+
+.card > h6{
+    margin-top: 8px;
+}
+@media screen and (min-width: 550px) {
+  .slots{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 770px) {
+  .slots{
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

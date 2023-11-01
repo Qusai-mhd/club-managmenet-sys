@@ -1,0 +1,48 @@
+{% extends "subscriptions_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}سجل تحضير {{ division }}{% endblock %}
+
+{%  block head %}
+    <link rel="stylesheet" href="{% static 'attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h3>سجل تحضير {{ division }} يوم  {{ today|date:"d /m /Y" }}</h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="holder">
+        <table width="100%">
+            <thead>
+            </thead>
+            <tbody>
+            {% for sub in subscriptions %}
+                <tr
+                    {% if sub.latest_end_date < today %}
+                        class="red-row"
+                    {% elif sub.latest_end_date <= after_three_days %}
+                        class="yellow-row"
+                    {% endif %}
+                >
+                    <td><label for="id_student_{{ sub.user.id }}" class="true-label">{{ sub.user.full_name }}</label> </td>
+                    <td>
+                        <label class="attendance" for="id_student_{{ sub.user.id }}">
+                            <input type="checkbox" id="id_student_{{ sub.user.id }}" name="student_{{ sub.user.id }}" {% if sub.attended %}checked{% endif %}>
+                            <span></span>
+                        </label>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        <button type="submit" class="btn btn-success btn-block">تقدم</button><br/>
+        <a href="{% url 'subscriptions:home' %}">
+            <button type="button" class="btn btn-secondary btn-block">إلغاء</button>
+        </a>
+</form>
+{% endblock %}

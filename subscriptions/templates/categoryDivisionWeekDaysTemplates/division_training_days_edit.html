@@ -1,0 +1,64 @@
+{% extends 'subscriptions_base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'division_training_days_edit.css' %}">
+{% endblock %}
+
+{% block title %}تعديل أيام التمرين {% endblock %}
+
+{% block content %}
+    {% if messages %}
+    <ul class="messages" style="direction: rtl">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+
+    <h3>تعديل أيام التمرين لـ {{ division }}</h3>
+
+    <hr>
+    <input type="checkbox" id="deleteAll"><label for="deleteAll">حذف الكل</label>
+    {% for day_form in form.forms %}
+      <hr>
+      <h5>
+        {% if day_form.instance.id %}
+          يوم {{ day_form.instance.day }}:
+        {% else %}
+          {% if form.forms|length > 1 %}
+            أضف يوماً آخر
+          {% else %}
+            أضف يوماً
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in timeSlot_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+      <table>
+        {{ day_form.as_table }}
+      </table>
+    {% endfor %}
+    <hr>
+    <p>
+      <button type="submit" value="Update Time Slots" class="btn btn-primary w-100 mb-3">تقدم</button>
+      <a href="{% url 'subscriptions:get-division' pk=division.id %}" role="button" class="btn btn-secondary w-100">إلغاء</a>
+    </p>
+  </form>
+
+    <script src="{% static 'delete_all.js' %}"></script>
+{% endblock content %}

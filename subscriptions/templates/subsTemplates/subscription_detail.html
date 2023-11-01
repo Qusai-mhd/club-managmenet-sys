@@ -1,0 +1,58 @@
+{% extends "subscriptions_base.html" %}
+{% load static %}
+{% block title %}معلومات الاشتراك{% endblock %}
+{% block content %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'inverted_table_style.css' %}">
+{% endblock %}
+<style>
+tr,th{
+    text-align: center;
+}
+</style>
+    {% if messages %}
+    <ul class="messages" style="direction: rtl">
+        {% for message in messages %}
+        <li{% if message.tags %}
+            class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}"
+        {% endif %}>{{ message }}</li><br/>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+  <table class="table u-align-center " style="font-size:125%">
+        <tbody>
+            <tr>
+                <th>اسم العميل</th>
+                <td>{{ subscription.user.full_name }}</td>
+            </tr>
+            <tr>
+                <th>رقم الهاتف</th>
+                <td>{{ subscription.user.phone }}</td>
+            </tr>
+            <tr>
+                <th>الفئة</th>
+                <td>{{ subscription.division }}</td>
+            </tr>
+            <tr>
+                <th>تاريخ انتهاء الاشتراك</th>
+                <td>{{ subscription.most_recent_period.end_date }}</td>
+            </tr>
+            <tr>
+                <th>المبلغ المستحق</th>
+                <td>{{ subscription.total_due_payment_property }}</td>
+            </tr>
+        </tbody>
+</table>
+    <div class="" role="group">
+        {% if not subscription.division.suspended %}
+            <a href="{% url 'subscriptions:extend-subscription' pk=subscription.id %}"><button style="white-space: nowrap" class="btn btn-success btn-lg">تمديد</button></a>
+        {% endif %}
+        {% if subscription.total_due_payment_property > 0 %}
+            <a href="{% url 'subscriptions:make-payment' pk=subscription.id %}"><button style="white-space: nowrap" class="btn btn-primary btn-lg">إضافة دفعة</button></a>
+        {% endif %}
+            <a href="{% url 'subscriptions:invoice-list' pk=subscription.id %}"><button style="white-space: nowrap" class="btn btn-info btn-lg">الفواتير</button></a>
+            <a href="{% url 'subscriptions:individual-history' pk=subscription.id %}"><button style="white-space: nowrap" class="btn btn-secondary btn-lg">سجل الحضور</button></a>
+            <a href="{% url 'subscriptions:delete-subscription' pk=subscription.id %}"><button style="white-space: nowrap" class="btn btn-danger btn-lg">حذف الاشتراك</button></a>
+    </div>
+{% endblock %}

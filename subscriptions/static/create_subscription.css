@@ -1,0 +1,30 @@
+.select2-search__field, #id_start_date{
+    text-align: right;
+}
+
+.info{
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2e4684;
+}
+
+.select2-selection{
+    width: 100%;
+    margin: auto 0;
+}
+
+.plus-icon{
+    cursor: pointer;
+    width: 4%;
+}
+
+.plus-icon:hover{
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.selection{
+    display: flex;
+    flex-direction: row;
+}
