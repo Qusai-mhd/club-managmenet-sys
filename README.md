@@ -2,7 +2,7 @@
 
 # This web-based app was developed to provide significant features for clubs managment.
 
-# It includes to main aspect: playgrounds reservation management functionalities - acedimic subscriptions management
+# The project consists of two main services: playgrounds reservation management functionalities - acedimic subscriptions management
 
 # To begin with the app you must follow the following conf steps:
 - create a virtualenv
